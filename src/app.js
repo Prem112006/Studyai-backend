@@ -58,9 +58,6 @@ if (process.env.VERCEL === '1') {
   app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 }
 
-// Main API Router mount
-app.use('/api', apiRouter);
-
 // Debug endpoint for Vercel deployment checks
 app.get('/api/debug-status', (req, res) => {
   res.json({
@@ -70,6 +67,9 @@ app.get('/api/debug-status', (req, res) => {
     dbStatus: mongoose.connection.readyState, // 0: disconnected, 1: connected, 2: connecting
   });
 });
+
+// Main API Router mount
+app.use('/api', apiRouter);
 
 // Root path diagnostic route
 app.get('/', (req, res) => {
