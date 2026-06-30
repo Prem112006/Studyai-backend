@@ -1,0 +1,36 @@
+{
+  "name": "studyai-backend",
+  "version": "1.0.0",
+  "description": "Backend for StudyAI - Smart Learning Assistant",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start:backend": "node src/index.js",
+    "start": "concurrently \"npm run start:backend\" \"npm run dev --prefix ../frontend\"",
+    "dev:backend": "nodemon src/index.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev --prefix ../frontend\"",
+    "data:import": "node src/utils/seeder.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.13.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.7.2",
+    "mongoose": "^8.2.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^9.0.1",
+    "officeparser": "^7.2.1",
+    "pdf-parse": "^1.1.1",
+    "studyai": "file:..",
+    "xss-clean": "^0.1.4"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0"
+  }
+}
