@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import os from 'os';
 import apiRouter from './routes/api.js';
 
 const app = express();
@@ -50,7 +51,11 @@ app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
 // Serve file uploads statically
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+if (process.env.VERCEL === '1') {
+  app.use('/uploads', express.static(os.tmpdir()));
+} else {
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+}
 
 // Main API Router mount
 app.use('/api', apiRouter);
