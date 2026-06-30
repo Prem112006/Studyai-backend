@@ -5,6 +5,7 @@ import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
 import os from 'os';
+import mongoose from 'mongoose';
 import apiRouter from './routes/api.js';
 
 const app = express();
@@ -59,6 +60,16 @@ if (process.env.VERCEL === '1') {
 
 // Main API Router mount
 app.use('/api', apiRouter);
+
+// Debug endpoint for Vercel deployment checks
+app.get('/api/debug-status', (req, res) => {
+  res.json({
+    hasMongoUri: !!process.env.MONGODB_URI,
+    hasJwtSecret: !!process.env.JWT_SECRET,
+    hasGeminiKey: !!process.env.GEMINI_API_KEY,
+    dbStatus: mongoose.connection.readyState, // 0: disconnected, 1: connected, 2: connecting
+  });
+});
 
 // Root path diagnostic route
 app.get('/', (req, res) => {
