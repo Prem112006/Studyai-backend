@@ -58,6 +58,21 @@ if (process.env.VERCEL === '1') {
   app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 }
 
+// Middleware to ensure database connection is established before serving any request
+app.use(async (req, res, next) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      console.log('[Database Middleware] Database not connected. Attempting to connect...');
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('[Database Middleware] Database connection established.');
+    }
+    next();
+  } catch (error) {
+    console.error('[Database Middleware] Database connection error:', error.message);
+    res.status(500).json({ message: 'Database connection failed. Please try again later.' });
+  }
+});
+
 // Debug endpoint for Vercel deployment checks
 app.get('/api/debug-status', (req, res) => {
   res.json({
