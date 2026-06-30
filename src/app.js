@@ -68,6 +68,29 @@ app.get('/api/debug-status', (req, res) => {
   });
 });
 
+app.get('/api/test-db', async (req, res) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      console.log('Awaiting database connection...');
+      await mongoose.connect(process.env.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000 // 5 seconds timeout
+      });
+    }
+    res.json({
+      success: true,
+      message: 'Database is connected!',
+      dbName: mongoose.connection.name,
+      host: mongoose.connection.host
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      stack: error.stack
+    });
+  }
+});
+
 // Main API Router mount
 app.use('/api', apiRouter);
 
